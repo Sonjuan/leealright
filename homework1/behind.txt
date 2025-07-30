@@ -1,0 +1,77 @@
+Homework1 에 대해
+
+하나의 데이터에 대해 연쇄적으로 '함수'를 적용하고 결과값을 내는 과정은 
+백엔드 업무에서 흔히 볼수있는 패턴이다.
+
+# 업무 예시
+게임데이터를 받고 현재 게임에 참가한 플레이어 중 블랙리스트 플레이어를 제외하고
+가장 딜을 많이 넣은 플레이어에게 보상을 준다.
+
+Task를 다음과 같이 쪼개어 볼 수 있다
+1. 게임데이터 받기 2. 현재 게임에 참가한 플레이어 구하기 3. 그 중에서 블랙리스트 플레이어 제외
+4. 가장 딜을 많이 넣은 플레이어 찾기 5. 보상 주기
+
+!! 코드예시는 실제 작동하는 코드가 아닌 이해를 돕기위해 작성됨
+
+1. 게임데이터 받기
+
+DB에서 가져온다면
+client = MongoClient("mongodb://localhost:27017/")
+db = client["your_database"]
+collection = db["game_matches"]
+raw_data = collection.find_one({"matchID": a391jfbz0183})
+
+다른 게임서버에서 API를 통해 가져온다면
+response = requests.get(f"https://api.riotgames.com/lol/summoner/v4/summoners/by-name/{summoner_name}", headers=HEADERS)
+raw_data = response.json()
+
+DB나 API를 통해 가져온 raw_data는 보통 매우 큰 크기의 데이터이기 때문에 보통 전처리 과정을 거친다
+def trim() :
+    #데이터를 보기좋게 만들거나 원하는 타입으로 변경함
+    전처리 알고리즘
+
+data = trim(raw_data)
+
+2. 현재 게임에 참가한 플레이어 구하기
+def get_players(data) :
+    res = []
+    for d in data :
+        res.append(d['players'])
+    return res
+
+get_players(trim(raw_data))
+
+3. 그 중에서 블랙리스트 플레이어 제외
+def filter_blacklist(data) :
+    return filter(filter_functionX, data)
+
+# 미리 작성된 필터함수(filter_functionX)를 통해 블랙리스트 플레이어가 걸러진 플레이어들이 반환된다
+filter_blacklist(get_players(trim(raw_data)))
+
+4. 딜을 가장 많이 넣은 플레이어 찾기
+def find_most_deadly_player(data) :
+    # data의 'damage' 키 값을 기준으로 정렬하고 가장 높은 플레이어 한명을 반환
+    return sort(data, key=lambda x: x['damage'])[0]
+
+find_most_deadly_player(filter_blacklist(get_players(trim(raw_data))))
+
+5. 보상 주기
+def reward(player) :
+    # 상자주기 코드 (플레이어ID를 통해 게임서버의 플레이어 인벤토리에 상자를 추가시킴)
+    # 상자주기 코드가 성공했다면 1 아니면 0을 반환
+    if 상자주기코드() :
+        return 1
+    else :
+        return 0
+
+if reward(find_most_deadly_player(filter_blacklist(get_players(trim(raw_data))))) :
+    print("성공")
+else :
+    print("실패") -> 예외처리로
+
+
+위 코드를 통해 나타낸 예시는 다른 요인(속도, 효율, 재사용성)들을 고려하지 않고 작성되었지만
+
+백엔드 업무의 흐름은
+[데이터 ----> 함수(데이터) ----> 함수(데이터) ----> 함수(데이터) ----> 원하는결과 ----> API 요청에 대해 응답하거나 프론트엔드로 결과를 넘김]
+이러한 과정으로 이어진다고 볼 수 있다
