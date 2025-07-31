@@ -18,7 +18,7 @@
 
 > ⚠️ 코드 예시는 실제 작동하는 코드가 아닌 **이해를 돕기 위한 예시**입니다.
 
----
+
 ## 1. 게임 데이터 받기
 
 ### 📦 DB에서 가져오는 경우:
@@ -45,7 +45,6 @@ def trim(data):
 
 data = trim(raw_data)
 ```
----
 
 ## 2. 현재 게임에 참가한 플레이어 구하기
 
@@ -59,7 +58,6 @@ def get_players(data):
 get_players(trim(raw_data))
 ```
 
----
 
 ## 3. 블랙리스트 플레이어 제외
 ```python
@@ -67,7 +65,7 @@ def filter_blacklist(data):
     return list(filter(filter_functionX, data)) # 미리 정의된 블랙리스트 필터 사용
 filter_blacklist(get_players(trim(raw_data)))
 ```    
----
+
 ## 4. 딜을 가장 많이 넣은 플레이어 찾기
 
 ```python
@@ -77,7 +75,7 @@ def find_most_deadly_player(data):
 
 find_most_deadly_player(filter_blacklist(get_players(trim(raw_data))))
 ```  
----
+
 
 ## 5. 보상 주기
 ```python
@@ -105,7 +103,6 @@ final_result =
         )
     )
 ```
----
 
 ## 🧠 핵심 개념 요약
 
